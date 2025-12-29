@@ -35,8 +35,13 @@ jobs:
 
       - name: Update Preview Screenshot
         run: |
-          npm install puppeteer
-          node scripts/screenshot.js
+          npm install puppeteer wait-on http-server
+          # Start a local server in the background
+          npx http-server dist -p 8080 &
+          # Wait for server to be ready
+          npx wait-on http://localhost:8080/icogen/
+          # Run screenshot against local server
+          node scripts/screenshot.js http://localhost:8080/icogen/
         env:
           PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 'false'
 
