@@ -6,7 +6,7 @@ on:
       - master
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -32,6 +32,19 @@ jobs:
 
       - name: Build
         run: npm run build
+
+      - name: Update Preview Screenshot
+        run: |
+          npm install puppeteer
+          node scripts/screenshot.js
+        env:
+          PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 'false'
+
+      - name: Commit and Push changes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "docs: Update README preview screenshot"
+          file_pattern: 'docs/preview.png'
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
