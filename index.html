@@ -1,0 +1,308 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Material Icon Generator</title>
+  <!-- Noto Suite -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Noto+Serif+JP:wght@400;700&family=Noto+Sans+Symbols&family=Noto+Sans+Symbols+2&family=Noto+Music&family=Noto+Serif+Hentaigana&family=Noto+Sans+Egyptian+Hieroglyphs&family=Noto+Color+Emoji&family=Noto+Emoji:wght@400;700&display=swap"
+    rel="stylesheet">
+</head>
+
+<body>
+  <div id="app">
+    <!-- Left Pane: Input -->
+    <aside id="left-pane">
+      <h2>Input</h2>
+
+      <div class="control-group">
+        <label for="input-text">Text / Icon Name</label>
+        <input type="text" id="input-text" maxlength="32" value="M" placeholder="A or icon_name">
+      </div>
+
+      <div class="control-group">
+        <label for="input-font">Font Family</label>
+        <select id="input-font">
+          <option value="Noto Sans JP" selected>Noto Sans JP</option>
+          <option value="Noto Serif JP">Noto Serif JP</option>
+          <option value="Noto Sans Symbols">Noto Sans Symbols</option>
+          <option value="Noto Sans Symbols 2">Noto Sans Symbols 2</option>
+          <option value="Noto Music">Noto Music</option>
+          <option value="Noto Serif Hentaigana">Noto Serif Hentaigana</option>
+          <option value="Noto Sans Egyptian Hieroglyphs">Noto Sans Egyptian Hieroglyphs</option>
+          <option value="Noto Color Emoji">Noto Color Emoji</option>
+          <option value="Noto Emoji">Noto Emoji</option>
+        </select>
+      </div>
+
+      <div class="control-group">
+        <label for="input-font-size">Size</label>
+        <input type="range" id="input-font-size" min="10" max="200" value="100">
+      </div>
+
+      <div class="control-group">
+        <label>Position X: <span id="val-offset-x">0</span></label>
+        <input type="range" id="input-offset-x" min="-64" max="64" value="0"
+          oninput="document.getElementById('val-offset-x').textContent = this.value">
+      </div>
+      <div class="control-group">
+        <label>Position Y: <span id="val-offset-y">0</span></label>
+        <input type="range" id="input-offset-y" min="-64" max="64" value="0"
+          oninput="document.getElementById('val-offset-y').textContent = this.value">
+      </div>
+
+      <div class="control-group">
+        <div class="checkbox-group">
+          <label class="checkbox-item">
+            <input type="checkbox" id="input-bold"> Bold
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" id="input-italic"> Italic
+          </label>
+        </div>
+      </div>
+
+    </aside>
+
+    <!-- Center Pane: Preview -->
+    <main>
+      <div id="preview-container" style="width: 256px; height: 256px; margin-bottom: 32px;">
+        <!-- SVG will be injected here -->
+      </div>
+
+      <button id="btn-export" class="btn-primary">
+        <svg style="width:24px;height:24px" viewBox="0 0 24 24">
+          <path fill="currentColor" d="M5,20H19V18H5M19,9H15V3H9V9H5L12,16L19,9Z" />
+        </svg>
+        Export .ICO
+      </button>
+    </main>
+
+    <!-- Right Pane: Design Controls -->
+    <aside id="right-pane">
+      <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+        <h2>Design</h2>
+        <div style="gap: 4px; display: flex;">
+          <button type="button" id="btn-save" class="btn-small">Save</button>
+          <button type="button" id="btn-load" class="btn-small">Load</button>
+          <input type="file" id="input-load-file" style="display:none" accept=".json">
+        </div>
+      </div>
+
+      <!-- Shape Section -->
+      <details open>
+        <summary>Shape</summary>
+        <div class="control-group">
+          <select id="design-shape">
+            <option value="circle">Circle</option>
+            <option value="square">Square</option>
+            <option value="rounded">Rounded Square</option>
+            <option value="hexagon" selected>Hexagon</option>
+            <option value="diamond">Diamond</option>
+            <option value="shield">Shield</option>
+          </select>
+        </div>
+        <div class="control-group">
+          <label>Scale: <span id="val-shape-scale">90%</span></label>
+          <input type="range" id="input-shape-scale" min="50" max="100" value="90"
+            oninput="document.getElementById('val-shape-scale').textContent = this.value + '%'">
+        </div>
+        <fieldset class="effect-group">
+          <legend>
+            <label class="checkbox-item">
+              <input type="checkbox" id="effect-shape-shadow-enabled"> Shadow
+            </label>
+          </legend>
+          <div class="control-group">
+            <label class="checkbox-item">
+              <input type="checkbox" id="effect-shape-shadow-blur" checked> Blur
+            </label>
+            <div class="color-picker-wrapper">
+              <input type="color" id="effect-shape-shadow-color" value="#000000">
+              <span class="color-value">#000000</span>
+            </div>
+          </div>
+          <div class="control-group">
+            <label>Angle: <span id="val-shape-shadow-angle">45°</span></label>
+            <input type="range" id="effect-shape-shadow-angle" min="0" max="360" value="45"
+              oninput="document.getElementById('val-shape-shadow-angle').textContent = this.value + '°'">
+          </div>
+          <div class="control-group">
+            <label>Distance: <span id="val-shape-shadow-dist">4</span></label>
+            <input type="range" id="effect-shape-shadow-dist" min="0" max="64" value="4"
+              oninput="document.getElementById('val-shape-shadow-dist').textContent = this.value">
+          </div>
+          <div class="control-group">
+            <label>Opacity</label>
+            <input type="range" id="effect-shape-shadow-opacity" min="0" max="100" value="50">
+          </div>
+        </fieldset>
+
+        <fieldset class="effect-group">
+          <legend>
+            <label class="checkbox-item">
+              <input type="checkbox" id="effect-shape-inner-shadow-enabled"> Inner Shadow
+            </label>
+          </legend>
+          <div class="control-group">
+            <label class="checkbox-item">
+              <input type="checkbox" id="effect-shape-inner-shadow-blur" checked> Blur
+            </label>
+            <div class="color-picker-wrapper">
+              <input type="color" id="effect-shape-inner-shadow-color" value="#ffffff">
+              <span class="color-value">#ffffff</span>
+            </div>
+          </div>
+          <div class="control-group">
+            <label>Angle: <span id="val-shape-inner-shadow-angle">45°</span></label>
+            <input type="range" id="effect-shape-inner-shadow-angle" min="0" max="360" value="45"
+              oninput="document.getElementById('val-shape-inner-shadow-angle').textContent = this.value + '°'">
+          </div>
+          <div class="control-group">
+            <label>Distance: <span id="val-shape-inner-shadow-dist">4</span></label>
+            <input type="range" id="effect-shape-inner-shadow-dist" min="0" max="64" value="4"
+              oninput="document.getElementById('val-shape-inner-shadow-dist').textContent = this.value">
+          </div>
+          <div class="control-group">
+            <label>Opacity</label>
+            <input type="range" id="effect-shape-inner-shadow-opacity" min="0" max="100" value="50">
+          </div>
+        </fieldset>
+      </details>
+
+      <!-- Background Section -->
+      <details>
+        <summary>Background</summary>
+        <div class="control-group">
+          <label>Color</label>
+          <div class="color-picker-wrapper">
+            <input type="color" id="design-color" value="#6200ee">
+            <span class="color-value">#6200ee</span>
+          </div>
+        </div>
+        <fieldset class="effect-group">
+          <legend>
+            <label class="checkbox-item">
+              <input type="checkbox" id="effect-bg-gradient-enabled"> Gradient Overlay
+            </label>
+          </legend>
+          <div class="control-group">
+            <div class="color-picker-wrapper">
+              <input type="color" id="effect-bg-gradient-color" value="#000000">
+              <span class="color-value">#000000</span>
+            </div>
+          </div>
+          <div class="control-group">
+            <label>Opacity</label>
+            <input type="range" id="effect-bg-gradient-opacity" min="0" max="100" value="20">
+          </div>
+        </fieldset>
+      </details>
+
+      <!-- Text Color Section -->
+      <details open>
+        <summary>Text Color</summary>
+        <div class="control-group">
+          <label>Fill Color</label>
+          <div class="color-picker-wrapper">
+            <input type="color" id="design-text-color" value="#ffffff">
+            <span class="color-value">#ffffff</span>
+          </div>
+        </div>
+        <fieldset class="effect-group">
+          <legend>
+            <label class="checkbox-item">
+              <input type="checkbox" id="effect-text-gradient-enabled"> Gradient Overlay
+            </label>
+          </legend>
+          <div class="control-group">
+            <div class="color-picker-wrapper">
+              <input type="color" id="effect-text-gradient-color" value="#cccccc">
+              <span class="color-value">#cccccc</span>
+            </div>
+          </div>
+          <div class="control-group">
+            <label>Opacity</label>
+            <input type="range" id="effect-text-gradient-opacity" min="0" max="100" value="50">
+          </div>
+        </fieldset>
+      </details>
+
+      <!-- Text Effects Section -->
+      <details>
+        <summary>Text Effects</summary>
+        <!-- Shadow Settings -->
+        <fieldset class="effect-group">
+          <legend>
+            <label class="checkbox-item">
+              <input type="checkbox" id="effect-shadow-enabled" checked> Shadow
+            </label>
+          </legend>
+          <div class="control-group" style="display:flex; gap:8px; align-items:center;">
+            <select id="effect-shadow-type" style="flex:1;">
+              <option value="drop">Drop</option>
+              <option value="long" selected>Long</option>
+            </select>
+            <label class="checkbox-item">
+              <input type="checkbox" id="effect-shadow-blur"> Blur/Fade
+            </label>
+          </div>
+
+          <!-- Long Shadow Specifics -->
+          <div class="control-group" id="long-shadow-opts">
+            <label style="margin-top:4px;">Length: <span id="val-shadow-len">64</span></label>
+            <input type="range" id="effect-shadow-len" min="1" max="256" value="64"
+              oninput="document.getElementById('val-shadow-len').textContent = this.value">
+          </div>
+
+          <div class="control-group">
+            <label>Color</label>
+            <div class="color-picker-wrapper">
+              <input type="color" id="effect-shadow-color" value="#000000">
+              <span class="color-value">#000000</span>
+            </div>
+          </div>
+          <div class="control-group">
+            <label>Opacity: <span id="val-shadow-opacity">0.4</span></label>
+            <input type="range" id="effect-shadow-opacity" min="0" max="100" value="40"
+              oninput="document.getElementById('val-shadow-opacity').textContent = (this.value/100).toFixed(1)">
+          </div>
+        </fieldset>
+
+        <!-- Outline Settings -->
+        <fieldset class="effect-group">
+          <legend>
+            <label class="checkbox-item">
+              <input type="checkbox" id="effect-outline-enabled"> Outline
+            </label>
+          </legend>
+          <div class="control-group">
+            <label>Color</label>
+            <div class="color-picker-wrapper">
+              <input type="color" id="effect-outline-color" value="#ffffff">
+              <span class="color-value">#ffffff</span>
+            </div>
+          </div>
+          <div class="control-group">
+            <label>Width: <span id="val-outline-width">4</span></label>
+            <input type="range" id="effect-outline-width" min="1" max="20" value="4"
+              oninput="document.getElementById('val-outline-width').textContent = this.value">
+          </div>
+          <div class="control-group">
+            <label>Opacity: <span id="val-outline-opacity">1.0</span></label>
+            <input type="range" id="effect-outline-opacity" min="0" max="100" value="100"
+              oninput="document.getElementById('val-outline-opacity').textContent = (this.value/100).toFixed(1)">
+          </div>
+        </fieldset>
+      </details>
+    </aside>
+  </div>
+  <script type="module" src="/src/main.js"></script>
+</body>
+
+</html>

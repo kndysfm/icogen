@@ -1,0 +1,336 @@
+:root {
+  /* Material Design Color Palette (Simulated) */
+  --md-primary: #6200ee;
+  --md-primary-variant: #3700b3;
+  --md-secondary: #03dac6;
+  --md-background: #121212;
+  --md-surface: #1e1e1e;
+  --md-error: #cf6679;
+  --md-on-primary: #ffffff;
+  --md-on-secondary: #000000;
+  --md-on-background: #ffffff;
+  --md-on-surface: #ffffff;
+  --md-on-error: #000000;
+
+  /* Spacing */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+
+  /* Layout */
+  --pane-width-side: 320px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Roboto', -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  background-color: var(--md-background);
+  color: var(--md-on-background);
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+#app {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: var(--pane-width-side) 1fr var(--pane-width-side);
+  grid-template-rows: 100%;
+}
+
+aside {
+  background-color: var(--md-surface);
+  padding: var(--spacing-md);
+  border-right: 1px solid rgba(255, 255, 255, 0.12);
+  border-left: 1px solid rgba(255, 255, 255, 0.12);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  overflow-y: auto;
+}
+
+#left-pane {
+  border-left: none;
+}
+
+#right-pane {
+  border-right: none;
+}
+
+aside>* {
+  flex-shrink: 0;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-image:
+    linear-gradient(45deg, #2c2c2c 25%, transparent 25%),
+    linear-gradient(-45deg, #2c2c2c 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #2c2c2c 75%),
+    linear-gradient(-45deg, transparent 75%, #2c2c2c 75%);
+  background-size: 20px 20px;
+  background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+  position: relative;
+}
+
+h1,
+h2,
+h3 {
+  margin-bottom: var(--spacing-sm);
+  font-weight: 500;
+}
+
+h2 {
+  font-size: 1.25rem;
+  color: var(--md-secondary);
+  border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: var(--spacing-xs);
+}
+
+.control-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+label {
+  font-size: 0.875rem;
+  opacity: 0.87;
+}
+
+input[type="text"],
+select,
+input[type="color"] {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: white;
+  padding: var(--spacing-sm);
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+select option {
+  background-color: var(--md-surface);
+  color: white;
+}
+
+input[type="text"]:focus,
+select:focus {
+  border-color: var(--md-primary);
+  outline: none;
+}
+
+input[type="range"] {
+  width: 100%;
+  accent-color: var(--md-primary);
+}
+
+.checkbox-group {
+  display: flex;
+  gap: var(--spacing-md);
+  margin-top: var(--spacing-xs);
+}
+
+.checkbox-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+input[type="text"]:focus {
+  border-color: var(--md-primary);
+  outline: none;
+}
+
+button.btn-primary {
+  background-color: var(--md-primary);
+  color: var(--md-on-primary);
+  border: none;
+  padding: var(--spacing-md) var(--spacing-lg);
+  border-radius: 28px;
+  /* FAB style rounded */
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+  transition: all 0.3s cubic-bezier(.25, .8, .25, 1);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+button.btn-primary:hover {
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+  transform: translateY(-2px);
+}
+
+button.btn-primary:active {
+  background-color: var(--md-primary-variant);
+}
+
+/* Fieldset Styling */
+fieldset.effect-group {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 8px;
+  padding: var(--spacing-sm) var(--spacing-md) var(--spacing-md);
+  margin-bottom: var(--spacing-sm);
+}
+
+fieldset.effect-group legend {
+  padding: 0 var(--spacing-sm);
+  color: var(--md-secondary);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+fieldset.effect-group .control-group {
+  margin-bottom: var(--spacing-sm);
+}
+
+fieldset.effect-group .control-group:last-child {
+  margin-bottom: 0;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--md-background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #444;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Color Picker Enhancements */
+.color-picker-wrapper {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 4px;
+  /* Tighter padding for wrapper */
+  border-radius: 4px;
+}
+
+input[type="color"] {
+  appearance: none;
+  -webkit-appearance: none;
+  border: none;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  background: none;
+  cursor: pointer;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+input[type="color"]::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+input[type="color"]::-webkit-color-swatch {
+  border: none;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.color-value {
+  font-family: monospace;
+  font-size: 0.9rem;
+  opacity: 0.8;
+  flex: 1;
+}
+
+/* Collapsible Styling */
+details {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 8px;
+  margin-bottom: var(--spacing-sm);
+  overflow: hidden;
+}
+
+details[open] {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+summary {
+  padding: var(--spacing-sm) var(--spacing-md);
+  cursor: pointer;
+  font-weight: 500;
+  list-style: none;
+  /* Hide default triangle in some browsers */
+  color: var(--md-secondary);
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+summary::-webkit-details-marker {
+  display: none;
+}
+
+summary::after {
+  content: '+';
+  font-weight: bold;
+  float: right;
+  transition: transform 0.2s;
+}
+
+details[open] summary::after {
+  transform: rotate(45deg);
+}
+
+details[open] summary {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: var(--spacing-sm);
+}
+
+/* Content inside details */
+details>div,
+details>fieldset {
+  padding: 0 var(--spacing-md) var(--spacing-md);
+}
+
+/* Small Button Styling */
+.btn-small {
+  background-color: var(--md-surface);
+  color: var(--md-secondary);
+  border: 1px solid var(--md-secondary);
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-small:hover {
+  background-color: var(--md-secondary);
+  color: var(--md-on-secondary);
+}
