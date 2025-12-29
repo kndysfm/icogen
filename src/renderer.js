@@ -9,7 +9,7 @@ export function renderSVG(state) {
   if (state.shapeShadowEnabled) {
     const blurStd = state.shapeShadowBlur ? 4 : 0; // Default 4 for soft, 0 for hard
     const dist = parseInt(state.shapeShadowDistance) || 4;
-    const angle = parseInt(state.globalShadowAngle) || 45;
+    const angle = parseInt(state.globalShadowAngle) ?? 45;
     const rad = angle * (Math.PI / 180);
 
     const dx = dist * Math.cos(rad);
@@ -25,7 +25,7 @@ export function renderSVG(state) {
   if (state.shapeInnerShadowEnabled) {
     const blurStd = state.shapeInnerShadowBlur ? 4 : 0;
     const dist = parseInt(state.shapeInnerShadowDistance) || 4;
-    const angle = parseInt(state.globalShadowAngle) || 45;
+    const angle = parseInt(state.globalShadowAngle) ?? 45;
     const rad = angle * (Math.PI / 180);
 
     const dx = dist * Math.cos(rad);
@@ -174,8 +174,16 @@ export function renderSVG(state) {
   // 3. Background Gradient
   if (state.bgGradientEnabled) {
     const gradOp = state.bgGradientOpacity / 100;
+    // Use global shadow angle for gradient direction
+    const angle = parseInt(state.globalShadowAngle) ?? 45;
+    const rad = angle * (Math.PI / 180);
+    // Calculate gradient vector (perpendicular to light direction for natural look)
+    const x1 = 50 - 50 * Math.cos(rad);
+    const y1 = 50 - 50 * Math.sin(rad);
+    const x2 = 50 + 50 * Math.cos(rad);
+    const y2 = 50 + 50 * Math.sin(rad);
     defsContent += `
-        <linearGradient id="bg-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+        <linearGradient id="bg-gradient" x1="${x1}%" y1="${y1}%" x2="${x2}%" y2="${y2}%">
           <stop offset="0%" style="stop-color:${state.bgGradientColor};stop-opacity:0" />
           <stop offset="100%" style="stop-color:${state.bgGradientColor};stop-opacity:${gradOp}" />
         </linearGradient>
@@ -185,8 +193,16 @@ export function renderSVG(state) {
   // 4. Text Gradient
   if (state.textGradientEnabled) {
     const gradOp = state.textGradientOpacity / 100;
+    // Use global shadow angle for gradient direction
+    const angle = parseInt(state.globalShadowAngle) ?? 45;
+    const rad = angle * (Math.PI / 180);
+    // Calculate gradient vector
+    const x1 = 50 - 50 * Math.cos(rad);
+    const y1 = 50 - 50 * Math.sin(rad);
+    const x2 = 50 + 50 * Math.cos(rad);
+    const y2 = 50 + 50 * Math.sin(rad);
     defsContent += `
-        <linearGradient id="text-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+        <linearGradient id="text-gradient" x1="${x1}%" y1="${y1}%" x2="${x2}%" y2="${y2}%">
           <stop offset="0%" style="stop-color:${state.textGradientColor};stop-opacity:${gradOp}" />
           <stop offset="100%" style="stop-color:${state.textGradientColor};stop-opacity:0" /> 
         </linearGradient>
@@ -198,7 +214,7 @@ export function renderSVG(state) {
   if (state.shadowEnabled && state.shadowType === 'drop') {
     const shOp = state.shadowOpacity / 100;
     const blurStr = state.shadowBlur ? '6' : '0';
-    const angle = parseInt(state.globalShadowAngle) || 45;
+    const angle = parseInt(state.globalShadowAngle) ?? 45;
     const rad = angle * (Math.PI / 180);
     const dist = 8;
     const dx = dist * Math.cos(rad);
@@ -255,7 +271,7 @@ export function renderSVG(state) {
     const shColor = state.shadowColor;
 
     // Use global shadow angle for direction
-    const angle = parseInt(state.globalShadowAngle) || 45;
+    const angle = parseInt(state.globalShadowAngle) ?? 45;
     const rad = angle * (Math.PI / 180);
 
     let clones = '';
