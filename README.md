@@ -14,14 +14,15 @@ A powerful, local-first web application for generating Material Design-style ico
 
 ### 🌟 Advanced Effects
 - **Shadow Effects**:
+  - **Unified Global Light Source**: Control all shadow and gradient angles with a single slider for Material Design consistency
   - Drop Shadow with blur control
   - Long Shadow with customizable length and fade
-  - Shape Shadow with angle and distance controls
+  - Shape Shadow with distance controls
   - Inner Shadow for shapes
 - **Text Effects**:
   - Outline with adjustable width and opacity
-  - Gradient overlay
-  - Multi-layered shadow effects
+  - Gradient overlay synced with global light source
+  - Multi-layered shadow effects (Drop & Long)
 
 ### 💾 Export & Configuration
 - **Multi-Size Export**: Generate .ICO files with multiple resolutions
