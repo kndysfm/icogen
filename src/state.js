@@ -17,13 +17,15 @@ export const state = {
     shapeScale: 90, // Percentage
     bgColor: '#6200ee',
 
+    // Global Shadow Settings
+    globalShadowAngle: 45, // Unified light source angle for all shadows
+
     // Shape Shadow
     shapeShadowEnabled: false,
     shapeShadowColor: '#000000',
     shapeShadowOpacity: 50,
     shapeShadowBlur: true,
     shapeShadowDistance: 4,
-    shapeShadowAngle: 45,
 
     // Shape Inner Shadow
     shapeInnerShadowEnabled: false,
@@ -31,7 +33,6 @@ export const state = {
     shapeInnerShadowOpacity: 50,
     shapeInnerShadowBlur: true,
     shapeInnerShadowDistance: 4,
-    shapeInnerShadowAngle: 45,
 
     bgGradientEnabled: false,
     bgGradientColor: '#000000',

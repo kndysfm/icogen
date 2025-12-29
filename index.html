@@ -112,6 +112,12 @@
           <input type="range" id="input-shape-scale" min="50" max="100" value="90"
             oninput="document.getElementById('val-shape-scale').textContent = this.value + '%'">
         </div>
+        <div class="control-group" style="background: rgba(255,255,255,0.05); padding: 8px; border-radius: 6px; margin-top: 8px;">
+          <label style="font-weight: 600;">🌟 Global Light Angle: <span id="val-global-shadow-angle">45°</span></label>
+          <input type="range" id="input-global-shadow-angle" min="0" max="360" value="45"
+            oninput="document.getElementById('val-global-shadow-angle').textContent = this.value + '°'">
+          <small style="opacity: 0.7; display: block; margin-top: 4px; font-size: 0.85em;">Controls all shadow directions</small>
+        </div>
         <fieldset class="effect-group">
           <legend>
             <label class="checkbox-item">
@@ -126,11 +132,6 @@
               <input type="color" id="effect-shape-shadow-color" value="#000000">
               <span class="color-value">#000000</span>
             </div>
-          </div>
-          <div class="control-group">
-            <label>Angle: <span id="val-shape-shadow-angle">45°</span></label>
-            <input type="range" id="effect-shape-shadow-angle" min="0" max="360" value="45"
-              oninput="document.getElementById('val-shape-shadow-angle').textContent = this.value + '°'">
           </div>
           <div class="control-group">
             <label>Distance: <span id="val-shape-shadow-dist">4</span></label>
@@ -157,11 +158,6 @@
               <input type="color" id="effect-shape-inner-shadow-color" value="#ffffff">
               <span class="color-value">#ffffff</span>
             </div>
-          </div>
-          <div class="control-group">
-            <label>Angle: <span id="val-shape-inner-shadow-angle">45°</span></label>
-            <input type="range" id="effect-shape-inner-shadow-angle" min="0" max="360" value="45"
-              oninput="document.getElementById('val-shape-inner-shadow-angle').textContent = this.value + '°'">
           </div>
           <div class="control-group">
             <label>Distance: <span id="val-shape-inner-shadow-dist">4</span></label>

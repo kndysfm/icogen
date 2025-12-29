@@ -9,7 +9,7 @@ export function renderSVG(state) {
   if (state.shapeShadowEnabled) {
     const blurStd = state.shapeShadowBlur ? 4 : 0; // Default 4 for soft, 0 for hard
     const dist = parseInt(state.shapeShadowDistance) || 4;
-    const angle = parseInt(state.shapeShadowAngle) || 45;
+    const angle = parseInt(state.globalShadowAngle) || 45;
     const rad = angle * (Math.PI / 180);
 
     const dx = dist * Math.cos(rad);
@@ -25,7 +25,7 @@ export function renderSVG(state) {
   if (state.shapeInnerShadowEnabled) {
     const blurStd = state.shapeInnerShadowBlur ? 4 : 0;
     const dist = parseInt(state.shapeInnerShadowDistance) || 4;
-    const angle = parseInt(state.shapeInnerShadowAngle) || 45;
+    const angle = parseInt(state.globalShadowAngle) || 45;
     const rad = angle * (Math.PI / 180);
 
     const dx = dist * Math.cos(rad);
@@ -198,9 +198,14 @@ export function renderSVG(state) {
   if (state.shadowEnabled && state.shadowType === 'drop') {
     const shOp = state.shadowOpacity / 100;
     const blurStr = state.shadowBlur ? '6' : '0';
+    const angle = parseInt(state.globalShadowAngle) || 45;
+    const rad = angle * (Math.PI / 180);
+    const dist = 8;
+    const dx = dist * Math.cos(rad);
+    const dy = dist * Math.sin(rad);
     defsContent += `
         <filter id="text-shadow" x="-50%" y="-50%" width="200%" height="200%">
-            <feDropShadow dx="8" dy="8" stdDeviation="${blurStr}" flood-color="${state.shadowColor}" flood-opacity="${shOp}"/>
+            <feDropShadow dx="${dx}" dy="${dy}" stdDeviation="${blurStr}" flood-color="${state.shadowColor}" flood-opacity="${shOp}"/>
         </filter>
       `;
     textFilterAttr = 'filter="url(#text-shadow)"';
@@ -249,10 +254,14 @@ export function renderSVG(state) {
     const baseOp = state.shadowOpacity / 100;
     const shColor = state.shadowColor;
 
+    // Use global shadow angle for direction
+    const angle = parseInt(state.globalShadowAngle) || 45;
+    const rad = angle * (Math.PI / 180);
+
     let clones = '';
     for (let i = 1; i <= len; i++) {
-      const shiftX = i + offX;
-      const shiftY = i + offY;
+      const shiftX = i * Math.cos(rad) + offX;
+      const shiftY = i * Math.sin(rad) + offY;
       if (solid) {
         clones += `<text ${textCommonAttrs} stroke="none" fill="${shColor}" transform="translate(${shiftX}, ${shiftY})">${state.text}</text>`;
       } else {

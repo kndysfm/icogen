@@ -15,13 +15,15 @@ export function initUI() {
         shapeScale: document.getElementById('input-shape-scale'),
         bgColor: document.getElementById('design-color'),
 
+        // Global Shadow Angle
+        globalShadowAngle: document.getElementById('input-global-shadow-angle'),
+
         // Shape Shadow
         shapeShadowEnabled: document.getElementById('effect-shape-shadow-enabled'),
         shapeShadowColor: document.getElementById('effect-shape-shadow-color'),
         shapeShadowOpacity: document.getElementById('effect-shape-shadow-opacity'),
         shapeShadowBlur: document.getElementById('effect-shape-shadow-blur'),
         shapeShadowDistance: document.getElementById('effect-shape-shadow-dist'),
-        shapeShadowAngle: document.getElementById('effect-shape-shadow-angle'),
 
         // Shape Inner Shadow
         shapeInnerShadowEnabled: document.getElementById('effect-shape-inner-shadow-enabled'),
@@ -29,7 +31,6 @@ export function initUI() {
         shapeInnerShadowOpacity: document.getElementById('effect-shape-inner-shadow-opacity'),
         shapeInnerShadowBlur: document.getElementById('effect-shape-inner-shadow-blur'),
         shapeInnerShadowDistance: document.getElementById('effect-shape-inner-shadow-dist'),
-        shapeInnerShadowAngle: document.getElementById('effect-shape-inner-shadow-angle'),
 
         // BG Gradient
         bgGradientEnabled: document.getElementById('effect-bg-gradient-enabled'),
