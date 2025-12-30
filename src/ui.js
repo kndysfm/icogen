@@ -9,6 +9,7 @@ export function initUI() {
         fontSizeScale: document.getElementById('input-font-size'),
         offsetX: document.getElementById('input-offset-x'),
         offsetY: document.getElementById('input-offset-y'),
+        rotate: document.getElementById('input-rotate'),
         fontWeight: document.getElementById('input-bold'),
         fontStyle: document.getElementById('input-italic'),
         shape: document.getElementById('design-shape'),
@@ -48,7 +49,7 @@ export function initUI() {
         shadowType: document.getElementById('effect-shadow-type'),
         shadowColor: document.getElementById('effect-shadow-color'),
         shadowOpacity: document.getElementById('effect-shadow-opacity'),
-        shadowLength: document.getElementById('effect-shadow-len'),
+        shadowDistance: document.getElementById('effect-shadow-dist'),
         // Unified Blur (Drop = Blur/Sharp, Long = Fade/Solid)
         shadowBlur: document.getElementById('effect-shadow-blur'),
 
@@ -71,34 +72,12 @@ export function initUI() {
     const btnExport = document.getElementById('btn-export');
 
     // Input Listeners
-    // Visibility Manager
-    const updateVisibility = () => {
-        const type = inputs.shadowType.value;
-        const longOpts = document.getElementById('long-shadow-opts');
-        // Drop opts removed, blur is now shared (always visible)
-
-        if (type === 'long') {
-            longOpts.style.display = 'block';
-        } else {
-            longOpts.style.display = 'none';
-        }
-    };
-
-    // Initial call
-    updateVisibility();
-
-    // Input Listeners
     Object.keys(inputs).forEach(key => {
         const el = inputs[key];
         if (el) {
             el.addEventListener('input', (e) => {
                 const val = el.type === 'checkbox' ? el.checked : e.target.value;
                 state.update({ [key]: val });
-
-                // Update Visibility on change
-                if (key === 'shadowType') {
-                    updateVisibility();
-                }
 
                 // Update Hex Display with safety check
                 if (el.type === 'color') {

@@ -57,6 +57,12 @@
       </div>
 
       <div class="control-group">
+        <label>Rotation: <span id="val-rotate">0</span>°</label>
+        <input type="range" id="input-rotate" min="-180" max="180" value="0"
+          oninput="document.getElementById('val-rotate').textContent = this.value">
+      </div>
+
+      <div class="control-group">
         <div class="checkbox-group">
           <label class="checkbox-item">
             <input type="checkbox" id="input-bold"> Bold
@@ -297,11 +303,10 @@
             </label>
           </div>
 
-          <!-- Long Shadow Specifics -->
-          <div class="control-group" id="long-shadow-opts">
-            <label style="margin-top:4px;">Length: <span id="val-shadow-len">64</span></label>
-            <input type="range" id="effect-shadow-len" min="1" max="256" value="64"
-              oninput="document.getElementById('val-shadow-len').textContent = this.value">
+          <div class="control-group">
+            <label style="margin-top:4px;">Distance: <span id="val-shadow-dist">8</span></label>
+            <input type="range" id="effect-shadow-dist" min="1" max="256" value="8"
+              oninput="document.getElementById('val-shadow-dist').textContent = this.value">
           </div>
 
           <div class="control-group">

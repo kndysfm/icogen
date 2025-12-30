@@ -79,6 +79,7 @@ export const state = {
     fontSizeScale: 100,
     offsetX: 0,
     offsetY: 0,
+    rotate: 0,
     fontWeight: false,
     fontStyle: false,
     textColor: '#ffffff',
@@ -117,7 +118,7 @@ export const state = {
     shadowType: 'long',
     shadowColor: '#000000',
     shadowOpacity: 40,
-    shadowLength: 64, // For Long Shadow
+    shadowDistance: 8, // Unified Distance (Drop) / Length (Long)
     // shadowSolid replaced by !multishadowBlur logic. using shadowBlur.
     shadowBlur: false, // Default false for Long Shadow? Or True?
     // User complaint: "Initial blur is unchecked but effective".

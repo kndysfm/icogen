@@ -237,21 +237,25 @@ export function renderSVG(state) {
   }
 
   // 5. Text Drop Shadow Filter
-  let textFilterAttr = '';
   if (state.shadowEnabled && state.shadowType === 'drop') {
     const shOp = state.shadowOpacity / 100;
     const blurStr = state.shadowBlur ? '6' : '0';
     const angle = parseInt(state.globalShadowAngle) ?? 45;
-    const rad = angle * (Math.PI / 180);
-    const dist = 8;
+    const rotate = parseInt(state.rotate) || 0;
+    // Compensate for text rotation so shadow follows global light
+    const effectiveAngle = angle - rotate;
+    const rad = effectiveAngle * (Math.PI / 180);
+    const dist = parseInt(state.shadowDistance) || 8;
     const dx = dist * Math.cos(rad);
     const dy = dist * Math.sin(rad);
     defsContent += `
-        <filter id="text-shadow" x="-50%" y="-50%" width="200%" height="200%">
-            <feDropShadow dx="${dx}" dy="${dy}" stdDeviation="${blurStr}" flood-color="${state.shadowColor}" flood-opacity="${shOp}"/>
+        <filter id="text-shadow-only" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur in="SourceAlpha" stdDeviation="${blurStr}"/>
+            <feOffset dx="${dx}" dy="${dy}" result="offsetblur"/>
+            <feFlood flood-color="${state.shadowColor}" flood-opacity="${shOp}"/>
+            <feComposite in2="offsetblur" operator="in"/>
         </filter>
       `;
-    textFilterAttr = 'filter="url(#text-shadow)"';
   }
 
   // --- Element Construction ---
@@ -330,6 +334,7 @@ export function renderSVG(state) {
   // Offsets
   const offX = parseInt(state.offsetX) || 0;
   const offY = parseInt(state.offsetY) || 0;
+  const rotate = parseInt(state.rotate) || 0;
 
   const textCommonAttrs = `
         x="50%"
@@ -346,7 +351,7 @@ export function renderSVG(state) {
   // Long Shadow Group
   let longShadowGroup = '';
   if (state.shadowEnabled && state.shadowType === 'long') {
-    const len = parseInt(state.shadowLength) || 64;
+    const len = parseInt(state.shadowDistance) || 64;
     // Unified Blur: Blur Checked = Fade. Blur Unchecked = Solid.
     const solid = !state.shadowBlur;
     const baseOp = state.shadowOpacity / 100;
@@ -361,16 +366,26 @@ export function renderSVG(state) {
       const shiftX = i * Math.cos(rad) + offX;
       const shiftY = i * Math.sin(rad) + offY;
       if (solid) {
-        clones += `<text ${textCommonAttrs} stroke="none" fill="${shColor}" transform="translate(${shiftX}, ${shiftY})">${state.text}</text>`;
+        clones += `<text ${textCommonAttrs} stroke="none" fill="${shColor}" transform="translate(${shiftX}, ${shiftY}) rotate(${rotate}, ${center}, ${center})">${state.text}</text>`;
       } else {
         const stepOp = baseOp * (1 - i / len);
-        clones += `<text ${textCommonAttrs} stroke="none" fill="${shColor}" fill-opacity="${stepOp}" transform="translate(${shiftX}, ${shiftY})">${state.text}</text>`;
+        clones += `<text ${textCommonAttrs} stroke="none" fill="${shColor}" fill-opacity="${stepOp}" transform="translate(${shiftX}, ${shiftY}) rotate(${rotate}, ${center}, ${center})">${state.text}</text>`;
       }
     }
 
     // Apply Clip Path here
     const groupOp = solid ? `opacity="${baseOp}"` : '';
     longShadowGroup = `<g clip-path="url(#shape-clip)" ${groupOp}>${clones}</g>`;
+  }
+
+  // Drop Shadow Group (Clipped)
+  let dropShadowGroup = '';
+  if (state.shadowEnabled && state.shadowType === 'drop') {
+    dropShadowGroup = `
+        <g clip-path="url(#shape-clip)">
+            <text ${textCommonAttrs} stroke="none" fill="black" filter="url(#text-shadow-only)" transform="translate(${offX}, ${offY}) rotate(${rotate}, ${center}, ${center})">${state.text}</text>
+        </g>
+      `;
   }
 
   // Outline Element
@@ -385,18 +400,16 @@ export function renderSVG(state) {
             stroke-opacity="${outOp}"
             stroke-linejoin="round"
             fill="none"
-            transform="translate(${offX}, ${offY})"
+            transform="translate(${offX}, ${offY}) rotate(${rotate}, ${center}, ${center})"
         >${state.text}</text>
       `;
   }
 
   // Main Text
-  // Apply Drop Shadow Filter here if needed.
-  // Wait, filter is applied to the element. If element is translated, shadow (filter) moves with it? Yes.
-  let mainText = `<text ${textCommonAttrs} stroke="none" fill="${state.textColor}" ${textFilterAttr} transform="translate(${offX}, ${offY})">${state.text}</text>`;
+  let mainText = `<text ${textCommonAttrs} stroke="none" fill="${state.textColor}" transform="translate(${offX}, ${offY}) rotate(${rotate}, ${center}, ${center})">${state.text}</text>`;
 
   if (state.textGradientEnabled) {
-    mainText += `<text ${textCommonAttrs} stroke="none" fill="url(#text-gradient)" style="pointer-events:none;" transform="translate(${offX}, ${offY})">${state.text}</text>`;
+    mainText += `<text ${textCommonAttrs} stroke="none" fill="url(#text-gradient)" style="pointer-events:none;" transform="translate(${offX}, ${offY}) rotate(${rotate}, ${center}, ${center})">${state.text}</text>`;
   }
 
   return `
@@ -404,6 +417,7 @@ export function renderSVG(state) {
       <defs>${defsContent}</defs>
       ${bgElement}
       ${longShadowGroup}
+      ${dropShadowGroup}
       ${outlineElement}
       ${mainText}
     </svg>
