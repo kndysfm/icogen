@@ -126,19 +126,11 @@ export function renderSVG(state) {
     }
     getShapeTag = (attrs) => `<polygon points="${points.join(' ')}" ${applyTransform(attrs)} />`;
   } else if (state.shape === 'diamond') {
-    // Diamond has specific transform.
-    // Base transform: translate(-offset, -offset) rotate(45 center center)
-    // We want to Scale the whole thing.
-    // If we prepend scale transform, it scales the coordinate system THEN draws.
-    // Because Diamond uses `transform="..."` hardcoded, we need to inject.
-    // Modified helper below.
+    const s = size / Math.sqrt(2);
+    const offset = (size - s) / 2;
     getShapeTag = (attrs) => {
-      const baseDiamondTransform = `translate(-${size * 0.3535}, -${size * 0.3535}) rotate(45 ${center} ${center})`;
-      // Combine: Scale then Place? Or Place then Scale?
-      // We want to scale the resulting diamond.
-      // `transform="ScaleTransform BaseTransform"`
-      // The applyTransform helper will prepend the shapeTransform to the baseDiamondTransform.
-      return `<rect x="${center}" y="${center}" width="${size * 0.707}" height="${size * 0.707}" ${applyTransform(`transform="${baseDiamondTransform}" ${attrs}`)} />`;
+      const rotateTransform = `rotate(45 ${center} ${center})`;
+      return `<rect x="${offset}" y="${offset}" width="${s}" height="${s}" ${applyTransform(`transform="${rotateTransform}" ${attrs}`)} />`;
     };
   } else if (state.shape === 'shield') {
     getShapeTag = (attrs) => `<path d="M${center},0 L${size},${size * 0.25} V${size * 0.5} C${size},${size * 0.8} ${center},${size} ${center},${size} C${center},${size} 0,${size * 0.8} 0,${size * 0.5} V${size * 0.25} Z" ${applyTransform(attrs)} />`;
