@@ -144,6 +144,11 @@ export const state = {
     edgeWidth: 2,
     autoColorHarmony: true,
 
+    // Score Effect
+    scoreEnabled: false,
+    scoreOpacity: 15,
+    scoreAngle: 180, // Vertical by default
+
     // Internal listeners
     _listeners: new Set(),
 

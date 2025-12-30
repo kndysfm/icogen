@@ -348,6 +348,34 @@ export function renderSVG(state) {
         style="user-select: none;"
   `;
 
+  // --- Score Effect Definitions ---
+  if (state.scoreEnabled) {
+    const scoreAngle = parseInt(state.scoreAngle) || 180;
+    const rad = scoreAngle * (Math.PI / 180);
+    const x1 = 50 - 50 * Math.cos(rad);
+    const y1 = 50 - 50 * Math.sin(rad);
+    const x2 = 50 + 50 * Math.cos(rad);
+    const y2 = 50 + 50 * Math.sin(rad);
+    const scoreOp = (state.scoreOpacity || 15) / 100;
+
+    defsContent += `
+        <linearGradient id="score-gradient" x1="${x1}%" y1="${y1}%" x2="${x2}%" y2="${y2}%">
+            <stop offset="50%" style="stop-color:#000000;stop-opacity:0" />
+            <stop offset="50%" style="stop-color:#000000;stop-opacity:${scoreOp}" />
+            <stop offset="100%" style="stop-color:#000000;stop-opacity:${scoreOp}" />
+        </linearGradient>
+    `;
+
+    // Text Clip Path for Score
+    // Note: We must replicate the text transform exactly.
+    const textTransform = `translate(${offX}, ${offY}) rotate(${rotate}, ${center}, ${center})`;
+    defsContent += `
+        <clipPath id="text-clip">
+            <text ${textCommonAttrs} transform="${textTransform}">${state.text}</text>
+        </clipPath>
+    `;
+  }
+
   // Long Shadow Group
   let longShadowGroup = '';
   if (state.shadowEnabled && state.shadowType === 'long') {
@@ -412,6 +440,12 @@ export function renderSVG(state) {
     mainText += `<text ${textCommonAttrs} stroke="none" fill="url(#text-gradient)" style="pointer-events:none;" transform="translate(${offX}, ${offY}) rotate(${rotate}, ${center}, ${center})">${state.text}</text>`;
   }
 
+  // Score Effect Overlay
+  let scoreElement = '';
+  if (state.scoreEnabled) {
+    scoreElement = `<rect x="0" y="0" width="${size}" height="${size}" fill="url(#score-gradient)" clip-path="url(#text-clip)" style="pointer-events:none;" />`;
+  }
+
   return `
     <svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" xmlns="http://www.w3.org/2000/svg">
       <defs>${defsContent}</defs>
@@ -420,6 +454,7 @@ export function renderSVG(state) {
       ${dropShadowGroup}
       ${outlineElement}
       ${mainText}
+      ${scoreElement}
     </svg>
   `;
 }

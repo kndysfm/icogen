@@ -65,7 +65,12 @@ export function initUI() {
         edgeTintShade: document.getElementById('effect-edge-tint-shade-enabled'),
         edgeOpacity: document.getElementById('effect-edge-opacity'),
         edgeWidth: document.getElementById('effect-edge-width'),
-        autoColorHarmony: document.getElementById('effect-auto-color-harmony-enabled')
+        autoColorHarmony: document.getElementById('effect-auto-color-harmony-enabled'),
+
+        // Score Effect
+        scoreEnabled: document.getElementById('effect-score-enabled'),
+        scoreOpacity: document.getElementById('effect-score-opacity'),
+        scoreAngle: document.getElementById('effect-score-angle')
     };
 
     const previewContainer = document.getElementById('preview-container');
