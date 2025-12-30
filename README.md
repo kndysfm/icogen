@@ -8,13 +8,20 @@ A powerful, local-first web application for generating Material Design-style ico
 
 ### 🎨 Rich Design Controls
 - **Shape Variations**: Circle, Square, Rounded Square, Hexagon, Diamond, Shield
-- **Advanced Text Styling**: Position control (X/Y), bold, italic, variable font size
+- **Advanced Text Styling**: Position control (X/Y), Rotation (-180° to 180°), bold, italic, variable font size
 - **Noto Font Suite**: Full integration with Noto Sans JP, Noto Serif JP, Noto Symbols, Noto Music, Noto Emoji, and more
 - **Color Customization**: Background colors, gradient overlays, text gradients
 
 ### 🌟 Advanced Effects
+- **Surface & Lighting (Material Design)**:
+  - **Finish Layer**: Glossy surface finish with adjustable opacity
+  - **Edge Treatment**: Tint and Shade effects for 3D depth
+  - **Score Effect**: Realistic fold/crease illusion for shapes
+  - **Auto Color Harmony**: Automatically generates harmonious tint/shade values based on background color
 - **Shadow Effects**:
   - **Unified Global Light Source**: Control all shadow and gradient angles with a single slider for Material Design consistency
+  - **Smart Clipping**: Shadows are correctly contained within the shape boundaries
+  - **Rotation-aware**: Shadow direction respects global light source regardless of text rotation
   - Drop Shadow with blur control
   - Long Shadow with customizable length and fade
   - Shape Shadow with distance controls
