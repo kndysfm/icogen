@@ -365,15 +365,6 @@ export function renderSVG(state) {
             <stop offset="100%" style="stop-color:#000000;stop-opacity:${scoreOp}" />
         </linearGradient>
     `;
-
-    // Text Clip Path for Score
-    // Note: We must replicate the text transform exactly.
-    const textTransform = `translate(${offX}, ${offY}) rotate(${rotate}, ${center}, ${center})`;
-    defsContent += `
-        <clipPath id="text-clip">
-            <text ${textCommonAttrs} transform="${textTransform}">${state.text}</text>
-        </clipPath>
-    `;
   }
 
   // Long Shadow Group
@@ -443,18 +434,18 @@ export function renderSVG(state) {
   // Score Effect Overlay
   let scoreElement = '';
   if (state.scoreEnabled) {
-    scoreElement = `<rect x="0" y="0" width="${size}" height="${size}" fill="url(#score-gradient)" clip-path="url(#text-clip)" style="pointer-events:none;" />`;
+    scoreElement = `<rect x="0" y="0" width="${size}" height="${size}" fill="url(#score-gradient)" clip-path="url(#shape-clip)" style="pointer-events:none;" />`;
   }
 
   return `
     <svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" xmlns="http://www.w3.org/2000/svg">
       <defs>${defsContent}</defs>
       ${bgElement}
+      ${scoreElement}
       ${longShadowGroup}
       ${dropShadowGroup}
       ${outlineElement}
       ${mainText}
-      ${scoreElement}
     </svg>
   `;
 }
