@@ -1,3 +1,5 @@
+import { calculateColorHarmony } from './state.js';
+
 export function renderSVG(state) {
   const size = 256;
   const center = size / 2;
@@ -46,7 +48,7 @@ export function renderSVG(state) {
   }
 
   // 3. Merge Flow
-  // Inputs: 
+  // Inputs:
   // - Drop Shadow Result: 'dropShadow' (if enabled)
   // - SourceGraphic
   // - Inner Shadow Result: 'innerShadow' (if enabled)
@@ -80,14 +82,14 @@ export function renderSVG(state) {
   const shapeTransform = `translate(${center} ${center}) scale(${scale}) translate(-${center} -${center})`;
 
   // Define helper to generate shape tag
-  // We append our transform to any existing transform logic. 
+  // We append our transform to any existing transform logic.
   // Note: Diamond already has a transform. SVG transforms stack if space separated or we need to concat.
   // Best to put the Scale Transform on a GROUP around the shape or append it carefully.
   // Simple approach: Apply Scale Transform to the attributes string.
 
   let getShapeTag = (attrs) => '';
 
-  // Wrapper to inject scale. 
+  // Wrapper to inject scale.
   // If shape is Diamond, it has its own transform.
   // "transform" attribute in SVG replaces previous.
   // So we should handle this.
@@ -134,7 +136,7 @@ export function renderSVG(state) {
       const baseDiamondTransform = `translate(-${size * 0.3535}, -${size * 0.3535}) rotate(45 ${center} ${center})`;
       // Combine: Scale then Place? Or Place then Scale?
       // We want to scale the resulting diamond.
-      // `transform="ScaleTransform BaseTransform"` 
+      // `transform="ScaleTransform BaseTransform"`
       // The applyTransform helper will prepend the shapeTransform to the baseDiamondTransform.
       return `<rect x="${center}" y="${center}" width="${size * 0.707}" height="${size * 0.707}" ${applyTransform(`transform="${baseDiamondTransform}" ${attrs}`)} />`;
     };
@@ -204,9 +206,34 @@ export function renderSVG(state) {
     defsContent += `
         <linearGradient id="text-gradient" x1="${x1}%" y1="${y1}%" x2="${x2}%" y2="${y2}%">
           <stop offset="0%" style="stop-color:${state.textGradientColor};stop-opacity:${gradOp}" />
-          <stop offset="100%" style="stop-color:${state.textGradientColor};stop-opacity:0" /> 
+          <stop offset="100%" style="stop-color:${state.textGradientColor};stop-opacity:0" />
         </linearGradient>
       `;
+  }
+
+  // 5. Finish Layer Gradient (Gloss Effect)
+  if (state.finishLayer) {
+    const angle = parseInt(state.globalShadowAngle) ?? 45;
+    const rad = angle * (Math.PI / 180);
+    // Center point for radial gradient (light source direction)
+    const cx = 50 + 30 * Math.cos(rad);
+    const cy = 50 + 30 * Math.sin(rad);
+    const op = (state.finishLayerOpacity !== undefined ? state.finishLayerOpacity : 15) / 100;
+    defsContent += `
+        <radialGradient id="finish-layer" cx="${cx}%" cy="${cy}%" r="60%">
+          <stop offset="0%" style="stop-color:#ffffff;stop-opacity:${op}" />
+          <stop offset="100%" style="stop-color:#ffffff;stop-opacity:0" />
+        </radialGradient>
+      `;
+  }
+
+  // 6. Calculate tint/shade for edge effects from background color
+  let tintColor = '#ffffff';
+  let shadeColor = '#000000';
+  if (state.autoColorHarmony) {
+    const harmony = calculateColorHarmony(state.bgColor);
+    tintColor = harmony.tint;
+    shadeColor = harmony.shade;
   }
 
   // 5. Text Drop Shadow Filter
@@ -238,6 +265,61 @@ export function renderSVG(state) {
     bgElement += getShapeTag(`fill="url(#bg-gradient)" style="pointer-events:none;"`);
   }
 
+  // Finish Layer (Gloss Effect)
+  if (state.finishLayer) {
+    bgElement += getShapeTag(`fill="url(#finish-layer)" style="pointer-events:none;"`);
+  }
+
+  // Edge Tint/Shade Effects
+  if (state.edgeTintShade) {
+    const edgeOp = (state.edgeOpacity !== undefined ? state.edgeOpacity : 20) / 100;
+    const edgeW = state.edgeWidth !== undefined ? state.edgeWidth : 2;
+
+    // We use stroke to simulate edge width, clipped to the shape
+    // Top edge (Tint)
+    // To make it appear only on top/bottom, we could use gradients or clip paths.
+    // Simple approach: Stroke the shape, but that strokes all sides.
+    // Material Design "Tinted Edge" is top edge, "Shaded Edge" is bottom edge.
+    // Let's use a linear gradient for the stroke?
+    // Or simpler: Just overlay the shape with a gradient fill that is transparent in middle?
+
+    // Better approach for "Edge":
+    // 1. Tint Layer: Linear Gradient Top-to-Bottom (White -> Transparent)
+    // 2. Shade Layer: Linear Gradient Bottom-to-Top (Black -> Transparent)
+    // But strictly 1dp height.
+
+    // Let's try the Stroke approach with Linear Gradient.
+    // Gradient for Tint Stroke: White at top (0%), Transparent at (small%).
+    // But stroke follows path.
+
+    // Let's stick to the previous "Fill" approach but use a Gradient to limit it to the edge?
+    // Previous implementation was just a solid fill on top of everything?
+    // "bgElement += getShapeTag..." -> This adds a whole new shape on top.
+    // If we fill it with solid color, it covers the whole shape!
+    // Ah, the previous code was:
+    // bgElement += getShapeTag(`fill="${tintColor}" fill-opacity="0.20" ...`);
+    // This would have covered the ENTIRE shape with white 20%. That's a tint, not an edge.
+    // User wants "Edge".
+
+    // Fix: Use Linear Gradients to simulate the top/bottom edges.
+    // Top Edge Gradient:
+    defsContent += `
+      <linearGradient id="edge-tint-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" style="stop-color:${tintColor};stop-opacity:${edgeOp}" />
+        <stop offset="${edgeW}%" style="stop-color:${tintColor};stop-opacity:${edgeOp}" />
+        <stop offset="${edgeW}%" style="stop-color:${tintColor};stop-opacity:0" />
+      </linearGradient>
+      <linearGradient id="edge-shade-grad" x1="0%" y1="100%" x2="0%" y2="0%">
+        <stop offset="0%" style="stop-color:${shadeColor};stop-opacity:${edgeOp}" />
+        <stop offset="${edgeW}%" style="stop-color:${shadeColor};stop-opacity:${edgeOp}" />
+        <stop offset="${edgeW}%" style="stop-color:${shadeColor};stop-opacity:0" />
+      </linearGradient>
+    `;
+
+    bgElement += getShapeTag(`fill="url(#edge-tint-grad)" style="pointer-events:none;"`);
+    bgElement += getShapeTag(`fill="url(#edge-shade-grad)" style="pointer-events:none;"`);
+  }
+
   // Text Common Attributes
   const fontFamily = state.font;
   const baseFontSize = state.text.length > 1 ? 120 : 160;
@@ -250,12 +332,12 @@ export function renderSVG(state) {
   const offY = parseInt(state.offsetY) || 0;
 
   const textCommonAttrs = `
-        x="50%" 
-        y="50%" 
-        text-anchor="middle" 
-        dominant-baseline="central" 
-        font-family="${fontFamily}" 
-        font-size="${fontSize}" 
+        x="50%"
+        y="50%"
+        text-anchor="middle"
+        dominant-baseline="central"
+        font-family="${fontFamily}"
+        font-size="${fontSize}"
         font-weight="${fontWeight}"
         font-style="${fontStyle}"
         style="user-select: none;"
@@ -296,7 +378,7 @@ export function renderSVG(state) {
   if (state.outlineEnabled) {
     const outOp = state.outlineOpacity / 100;
     outlineElement = `
-        <text 
+        <text
             ${textCommonAttrs}
             stroke="${state.outlineColor}"
             stroke-width="${state.outlineWidth * 2}"
@@ -309,7 +391,7 @@ export function renderSVG(state) {
   }
 
   // Main Text
-  // Apply Drop Shadow Filter here if needed. 
+  // Apply Drop Shadow Filter here if needed.
   // Wait, filter is applied to the element. If element is translated, shadow (filter) moves with it? Yes.
   let mainText = `<text ${textCommonAttrs} stroke="none" fill="${state.textColor}" ${textFilterAttr} transform="translate(${offX}, ${offY})">${state.text}</text>`;
 

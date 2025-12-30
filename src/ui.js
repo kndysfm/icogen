@@ -56,7 +56,15 @@ export function initUI() {
         outlineEnabled: document.getElementById('effect-outline-enabled'),
         outlineColor: document.getElementById('effect-outline-color'),
         outlineOpacity: document.getElementById('effect-outline-opacity'),
-        outlineWidth: document.getElementById('effect-outline-width')
+        outlineWidth: document.getElementById('effect-outline-width'),
+
+        // Material Design Features
+        finishLayer: document.getElementById('effect-finish-layer-enabled'),
+        finishLayerOpacity: document.getElementById('effect-finish-layer-opacity'),
+        edgeTintShade: document.getElementById('effect-edge-tint-shade-enabled'),
+        edgeOpacity: document.getElementById('effect-edge-opacity'),
+        edgeWidth: document.getElementById('effect-edge-width'),
+        autoColorHarmony: document.getElementById('effect-auto-color-harmony-enabled')
     };
 
     const previewContainer = document.getElementById('preview-container');

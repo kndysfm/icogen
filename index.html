@@ -171,6 +171,54 @@
         </fieldset>
       </details>
 
+      <!-- Surface & Lighting Section -->
+      <details>
+        <summary>Surface & Lighting</summary>
+
+        <!-- Material Design Features -->
+        <fieldset class="effect-group">
+          <legend>
+            <label class="checkbox-item">
+              <input type="checkbox" id="effect-finish-layer-enabled" checked> Finish Layer (Gloss)
+            </label>
+          </legend>
+          <div class="control-group">
+            <label>Opacity: <span id="val-finish-layer-opacity">15%</span></label>
+            <input type="range" id="effect-finish-layer-opacity" min="0" max="100" value="15"
+              oninput="document.getElementById('val-finish-layer-opacity').textContent = this.value + '%'">
+          </div>
+          <small style="opacity: 0.7; display: block; margin-top: 4px; font-size: 0.85em;">Gloss effect synchronized with light angle</small>
+        </fieldset>
+
+        <fieldset class="effect-group">
+          <legend>
+            <label class="checkbox-item">
+              <input type="checkbox" id="effect-edge-tint-shade-enabled" checked> Edge Tint/Shade
+            </label>
+          </legend>
+          <div class="control-group">
+            <label>Opacity: <span id="val-edge-opacity">20%</span></label>
+            <input type="range" id="effect-edge-opacity" min="0" max="100" value="20"
+              oninput="document.getElementById('val-edge-opacity').textContent = this.value + '%'">
+          </div>
+          <div class="control-group">
+            <label>Width: <span id="val-edge-width">2</span></label>
+            <input type="range" id="effect-edge-width" min="1" max="10" value="2"
+              oninput="document.getElementById('val-edge-width').textContent = this.value">
+          </div>
+          <small style="opacity: 0.7; display: block; margin-top: 4px; font-size: 0.85em;">Top & bottom edge treatments</small>
+        </fieldset>
+
+        <fieldset class="effect-group">
+          <legend>
+            <label class="checkbox-item">
+              <input type="checkbox" id="effect-auto-color-harmony-enabled" checked> Auto Color Harmony
+            </label>
+          </legend>
+          <small style="opacity: 0.7; display: block; margin-top: 4px; font-size: 0.85em;">Auto-calculate tint & shade from background</small>
+        </fieldset>
+      </details>
+
       <!-- Background Section -->
       <details>
         <summary>Background</summary>
