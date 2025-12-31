@@ -7,12 +7,15 @@ A powerful, local-first web application for generating Material Design-style ico
 ## ✨ Features
 
 ### 🎨 Rich Design Controls
-- **Shape Variations**: Circle, Square, Rounded Square, Hexagon, Diamond, Shield
+
+- **Shape Variations**: Circle, Square, Rounded Square, Rectangle, Rounded Rectangle, Triangle, Rounded Triangle, Hexagon, Rounded Hexagon, Diamond, Rounded Diamond
+- **Character Catalog**: Visual picker for selecting special characters, symbols, and emojis directly from the font
 - **Advanced Text Styling**: Position control (X/Y), Rotation (-180° to 180°), bold, italic, variable font size
-- **Noto Font Suite**: Full integration with Noto Sans JP, Noto Serif JP, Noto Symbols, Noto Music, Noto Emoji, and more
+- **Noto Font Suite**: Full integration with Noto Sans JP, Noto Serif JP, Noto Symbols, Noto Sans Symbols 2, Noto Music, Noto Emoji, and more
 - **Color Customization**: Background colors, gradient overlays, text gradients
 
 ### 🌟 Advanced Effects
+
 - **Surface & Lighting (Material Design)**:
   - **Finish Layer**: Glossy surface finish with adjustable opacity
   - **Edge Treatment**: Tint and Shade effects for 3D depth
@@ -32,11 +35,13 @@ A powerful, local-first web application for generating Material Design-style ico
   - Multi-layered shadow effects (Drop & Long)
 
 ### 💾 Export & Configuration
+
 - **Multi-Size Export**: Generate .ICO files with multiple resolutions
 - **Save/Load Settings**: Export and import all design settings as JSON
 - **Real-time Preview**: Live preview canvas with instant visual feedback
 
 ### 🎯 User Interface
+
 - **3-Pane Layout**:
   - **Left Pane**: Input controls (text, font, styling)
   - **Center Pane**: Real-time preview canvas
@@ -46,6 +51,7 @@ A powerful, local-first web application for generating Material Design-style ico
 ## 🚀 Getting Started
 
 ### Prerequisites
+
 - Node.js (v14 or higher)
 - npm or yarn
 
@@ -88,7 +94,7 @@ npm run preview
 
 ## 🏗️ Project Structure
 
-```
+```text
 icogen/
 ├── index.html          # Main HTML structure with 3-pane layout
 ├── package.json        # Project dependencies and scripts
@@ -117,10 +123,11 @@ icogen/
 
 > [!IMPORTANT]
 > **This entire project was generated using Google's Antigravity AI assistant.**
-> 
+>
 > All code, from the initial setup to the advanced features, was created through conversational prompts with Antigravity. This demonstrates the power of AI-assisted development for rapid prototyping and full-stack application creation.
 
 The project serves as a showcase of:
+
 - AI-generated web application architecture
 - Premium UI/UX design principles
 - Complex visual effects implementation
