@@ -178,7 +178,7 @@ export function renderSVG(state) {
       'Noto Serif Hentaigana': 'https://fonts.googleapis.com/css2?family=Noto+Serif+Hentaigana&display=swap',
       'Noto Sans Egyptian Hieroglyphs': 'https://fonts.googleapis.com/css2?family=Noto+Sans+Egyptian+Hieroglyphs&display=swap',
       'Noto Color Emoji': 'https://fonts.googleapis.com/css2?family=Noto+Color+Emoji&display=swap',
-      'Noto Emoji': 'https://fonts.googleapis.com/css2?family=Noto+Emoji:wght@400&display=swap'
+      'Noto Emoji': 'https://fonts.googleapis.com/css2?family=Noto+Emoji:wght@400;700&display=swap'
     };
     return map[fontName] || '';
   };
@@ -286,7 +286,7 @@ export function renderSVG(state) {
 
   // Background Element
   const shapeEffectsAttr = shapeFilterPrimitives ? 'filter="url(#shape-effects)"' : '';
-  
+
   // We group the base shape and its overlays so that the Inner Shadow (part of shape-effects)
   // is applied ON TOP of the overlays (Gradient, Finish Layer, etc).
   // This prevents the overlays from washing out the inner shadow.

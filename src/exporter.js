@@ -29,6 +29,7 @@ async function embedFonts(svg, fontName) {
     if (!fontName) return svg;
 
     const fontUrlMap = {
+        'Material Icons': 'https://fonts.googleapis.com/icon?family=Material+Icons',
         'Noto Sans JP': 'https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap',
         'Noto Serif JP': 'https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;700&display=swap',
         'Noto Sans Symbols': 'https://fonts.googleapis.com/css2?family=Noto+Sans+Symbols&display=swap',
@@ -37,7 +38,7 @@ async function embedFonts(svg, fontName) {
         'Noto Serif Hentaigana': 'https://fonts.googleapis.com/css2?family=Noto+Serif+Hentaigana&display=swap',
         'Noto Sans Egyptian Hieroglyphs': 'https://fonts.googleapis.com/css2?family=Noto+Sans+Egyptian+Hieroglyphs&display=swap',
         'Noto Color Emoji': 'https://fonts.googleapis.com/css2?family=Noto+Color+Emoji&display=swap',
-        'Noto Emoji': 'https://fonts.googleapis.com/css2?family=Noto+Emoji:wght@400&display=swap'
+        'Noto Emoji': 'https://fonts.googleapis.com/css2?family=Noto+Emoji:wght@400;700&display=swap'
     };
 
     const cssUrl = fontUrlMap[fontName];
