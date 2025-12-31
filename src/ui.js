@@ -302,4 +302,8 @@ export function initUI() {
             exportICO(svgElement.outerHTML, state.font);
         }
     });
+
+    // Initial UI Setup
+    updateCatalog(inputs.font.value);
+    updateVisibility();
 }

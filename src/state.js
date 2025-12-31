@@ -74,51 +74,51 @@ export function calculateColorHarmony(hexColor) {
 
 export const state = {
     // Text & Text Effects
-    text: 'M',
-    font: 'Noto Sans JP',
-    fontSizeScale: 100,
+    text: 'file_download',
+    font: 'Material Icons',
+    fontSizeScale: 120,
     offsetX: 0,
-    offsetY: 0,
+    offsetY: 5,
     rotate: 0,
     fontWeight: false,
     fontStyle: false,
-    textColor: '#ffffff',
-    textGradientEnabled: false,
-    textGradientColor: '#cccccc',
+    textColor: '#fefeec',
+    textGradientEnabled: true,
+    textGradientColor: '#03dac6',
     textGradientOpacity: 50,
 
     // Shape & Background Elements
-    shape: 'hexagon',
-    shapeScale: 90, // Percentage
+    shape: 'rounded-rectangle',
+    shapeScale: 85, // Percentage
     bgColor: '#6200ee',
 
     // Global Shadow Settings
     globalShadowAngle: 45, // Unified light source angle for all shadows
 
     // Shape Shadow
-    shapeShadowEnabled: false,
+    shapeShadowEnabled: true,
     shapeShadowColor: '#000000',
     shapeShadowOpacity: 50,
-    shapeShadowBlur: true,
-    shapeShadowDistance: 4,
+    shapeShadowBlur: false,
+    shapeShadowDistance: 25,
 
     // Shape Inner Shadow
-    shapeInnerShadowEnabled: false,
+    shapeInnerShadowEnabled: true,
     shapeInnerShadowColor: '#ffffff',
-    shapeInnerShadowOpacity: 50,
-    shapeInnerShadowBlur: true,
-    shapeInnerShadowDistance: 4,
+    shapeInnerShadowOpacity: 10,
+    shapeInnerShadowBlur: false,
+    shapeInnerShadowDistance: 5,
 
-    bgGradientEnabled: false,
-    bgGradientColor: '#000000',
+    bgGradientEnabled: true,
+    bgGradientColor: '#cf6679',
     bgGradientOpacity: 20,
 
     // Text Shadow (Drop / Long)
     shadowEnabled: true,
     shadowType: 'long',
     shadowColor: '#000000',
-    shadowOpacity: 40,
-    shadowDistance: 8, // Unified Distance (Drop) / Length (Long)
+    shadowOpacity: 15,
+    shadowDistance: 240, // Unified Distance (Drop) / Length (Long)
     // shadowSolid replaced by !multishadowBlur logic. using shadowBlur.
     shadowBlur: false, // Default false for Long Shadow? Or True?
     // User complaint: "Initial blur is unchecked but effective".
@@ -131,21 +131,21 @@ export const state = {
     // I will set it to TRUE and add `checked` to HTML.
 
     // Text Outline
-    outlineEnabled: false,
+    outlineEnabled: true,
     outlineColor: '#ffffff',
-    outlineOpacity: 100,
-    outlineWidth: 4,
+    outlineOpacity: 40,
+    outlineWidth: 2,
 
     // Material Design Features
     finishLayer: true,
-    finishLayerOpacity: 15,
+    finishLayerOpacity: 30,
     edgeTintShade: true,
     edgeOpacity: 20,
     edgeWidth: 2,
     autoColorHarmony: true,
 
     // Score Effect
-    scoreEnabled: false,
+    scoreEnabled: true,
     scoreOpacity: 15,
     scoreAngle: 180, // Vertical by default
 
