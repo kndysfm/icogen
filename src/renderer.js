@@ -110,12 +110,31 @@ export function renderSVG(state) {
     }
   };
 
+  // Helper to add stroke for rounded polygons
+  const addRoundedStroke = (attrs, width = 32) => {
+    const fillMatch = attrs.match(/fill="([^"]+)"/);
+    const strokeColor = fillMatch ? fillMatch[1] : 'black';
+    // If fill is a gradient URL, we need to ensure the stroke uses it too.
+    // The regex above captures it correctly.
+    return `${attrs} stroke="${strokeColor}" stroke-width="${width}" stroke-linejoin="round"`;
+  };
+
   if (state.shape === 'circle') {
     getShapeTag = (attrs) => `<circle cx="${center}" cy="${center}" r="${center}" ${applyTransform(attrs)} />`;
   } else if (state.shape === 'rounded') {
     getShapeTag = (attrs) => `<rect x="0" y="0" width="${size}" height="${size}" rx="50" ${applyTransform(attrs)} />`;
   } else if (state.shape === 'square') {
     getShapeTag = (attrs) => `<rect x="0" y="0" width="${size}" height="${size}" ${applyTransform(attrs)} />`;
+  } else if (state.shape === 'rectangle') {
+    getShapeTag = (attrs) => `<rect x="0" y="32" width="${size}" height="192" ${applyTransform(attrs)} />`;
+  } else if (state.shape === 'rounded-rectangle') {
+    getShapeTag = (attrs) => `<rect x="0" y="32" width="${size}" height="192" rx="32" ${applyTransform(attrs)} />`;
+  } else if (state.shape === 'triangle') {
+    const pointsCentered = "128,32 239,224 17,224";
+    getShapeTag = (attrs) => `<polygon points="${pointsCentered}" ${applyTransform(attrs)} />`;
+  } else if (state.shape === 'rounded-triangle') {
+    const pointsCentered = "128,48 223,212 33,212";
+    getShapeTag = (attrs) => `<polygon points="${pointsCentered}" ${applyTransform(addRoundedStroke(attrs, 32))} />`;
   } else if (state.shape === 'hexagon') {
     const r = center;
     const points = [];
@@ -125,15 +144,23 @@ export function renderSVG(state) {
       points.push(`${center + r * Math.cos(angle_rad)},${center + r * Math.sin(angle_rad)}`);
     }
     getShapeTag = (attrs) => `<polygon points="${points.join(' ')}" ${applyTransform(attrs)} />`;
+  } else if (state.shape === 'rounded-hexagon') {
+    const r = center - 16;
+    const points = [];
+    for (let i = 0; i < 6; i++) {
+      const angle_deg = 60 * i - 30;
+      const angle_rad = Math.PI / 180 * angle_deg;
+      points.push(`${center + r * Math.cos(angle_rad)},${center + r * Math.sin(angle_rad)}`);
+    }
+    getShapeTag = (attrs) => `<polygon points="${points.join(' ')}" ${applyTransform(addRoundedStroke(attrs, 32))} />`;
   } else if (state.shape === 'diamond') {
-    const s = size / Math.sqrt(2);
-    const offset = (size - s) / 2;
-    getShapeTag = (attrs) => {
-      const rotateTransform = `rotate(45 ${center} ${center})`;
-      return `<rect x="${offset}" y="${offset}" width="${s}" height="${s}" ${applyTransform(`transform="${rotateTransform}" ${attrs}`)} />`;
-    };
-  } else if (state.shape === 'shield') {
-    getShapeTag = (attrs) => `<path d="M${center},0 L${size},${size * 0.25} V${size * 0.5} C${size},${size * 0.8} ${center},${size} ${center},${size} C${center},${size} 0,${size * 0.8} 0,${size * 0.5} V${size * 0.25} Z" ${applyTransform(attrs)} />`;
+    // Use polygon to avoid rotation transform issues with shadow
+    const points = `128,0 256,128 128,256 0,128`;
+    getShapeTag = (attrs) => `<polygon points="${points}" ${applyTransform(attrs)} />`;
+  } else if (state.shape === 'rounded-diamond') {
+    // Use polygon with stroke for rounded corners, inset by 16px (half stroke) to fit in box
+    const points = `128,16 240,128 128,240 16,128`;
+    getShapeTag = (attrs) => `<polygon points="${points}" ${applyTransform(addRoundedStroke(attrs, 32))} />`;
   }
 
 
@@ -163,6 +190,10 @@ export function renderSVG(state) {
 
   // 1. Clip Path for Long Shadow
   defsContent += `<clipPath id="shape-clip">${getShapeTag('')}</clipPath>`;
+
+  // Mask for Overlays (ensures rounded corners and strokes are covered uniformly)
+  // We use fill="white" to create a solid white silhouette of the shape (including stroke)
+  defsContent += `<mask id="shape-mask">${getShapeTag('fill="white"')}</mask>`;
 
   // 2. Shape Shadow Filter - Removed (Replaced by #shape-effects)
 
@@ -255,16 +286,20 @@ export function renderSVG(state) {
 
   // Background Element
   const shapeEffectsAttr = shapeFilterPrimitives ? 'filter="url(#shape-effects)"' : '';
-  let bgElement = getShapeTag(`fill="${state.bgColor}" ${shapeEffectsAttr}`);
+  
+  // We group the base shape and its overlays so that the Inner Shadow (part of shape-effects)
+  // is applied ON TOP of the overlays (Gradient, Finish Layer, etc).
+  // This prevents the overlays from washing out the inner shadow.
+  let bgContent = getShapeTag(`fill="${state.bgColor}"`);
 
   if (state.bgGradientEnabled) {
-    // Overlay
-    bgElement += getShapeTag(`fill="url(#bg-gradient)" style="pointer-events:none;"`);
+    // Overlay with Mask to ensure gradient applies to the whole shape (fill + stroke) uniformly
+    bgContent += `<rect x="0" y="0" width="100%" height="100%" fill="url(#bg-gradient)" mask="url(#shape-mask)" style="pointer-events:none;" />`;
   }
 
   // Finish Layer (Gloss Effect)
   if (state.finishLayer) {
-    bgElement += getShapeTag(`fill="url(#finish-layer)" style="pointer-events:none;"`);
+    bgContent += `<rect x="0" y="0" width="100%" height="100%" fill="url(#finish-layer)" mask="url(#shape-mask)" style="pointer-events:none;" />`;
   }
 
   // Edge Tint/Shade Effects
@@ -272,33 +307,6 @@ export function renderSVG(state) {
     const edgeOp = (state.edgeOpacity !== undefined ? state.edgeOpacity : 20) / 100;
     const edgeW = state.edgeWidth !== undefined ? state.edgeWidth : 2;
 
-    // We use stroke to simulate edge width, clipped to the shape
-    // Top edge (Tint)
-    // To make it appear only on top/bottom, we could use gradients or clip paths.
-    // Simple approach: Stroke the shape, but that strokes all sides.
-    // Material Design "Tinted Edge" is top edge, "Shaded Edge" is bottom edge.
-    // Let's use a linear gradient for the stroke?
-    // Or simpler: Just overlay the shape with a gradient fill that is transparent in middle?
-
-    // Better approach for "Edge":
-    // 1. Tint Layer: Linear Gradient Top-to-Bottom (White -> Transparent)
-    // 2. Shade Layer: Linear Gradient Bottom-to-Top (Black -> Transparent)
-    // But strictly 1dp height.
-
-    // Let's try the Stroke approach with Linear Gradient.
-    // Gradient for Tint Stroke: White at top (0%), Transparent at (small%).
-    // But stroke follows path.
-
-    // Let's stick to the previous "Fill" approach but use a Gradient to limit it to the edge?
-    // Previous implementation was just a solid fill on top of everything?
-    // "bgElement += getShapeTag..." -> This adds a whole new shape on top.
-    // If we fill it with solid color, it covers the whole shape!
-    // Ah, the previous code was:
-    // bgElement += getShapeTag(`fill="${tintColor}" fill-opacity="0.20" ...`);
-    // This would have covered the ENTIRE shape with white 20%. That's a tint, not an edge.
-    // User wants "Edge".
-
-    // Fix: Use Linear Gradients to simulate the top/bottom edges.
     // Top Edge Gradient:
     defsContent += `
       <linearGradient id="edge-tint-grad" x1="0%" y1="0%" x2="0%" y2="100%">
@@ -313,9 +321,11 @@ export function renderSVG(state) {
       </linearGradient>
     `;
 
-    bgElement += getShapeTag(`fill="url(#edge-tint-grad)" style="pointer-events:none;"`);
-    bgElement += getShapeTag(`fill="url(#edge-shade-grad)" style="pointer-events:none;"`);
+    bgContent += `<rect x="0" y="0" width="100%" height="100%" fill="url(#edge-tint-grad)" mask="url(#shape-mask)" style="pointer-events:none;" />`;
+    bgContent += `<rect x="0" y="0" width="100%" height="100%" fill="url(#edge-shade-grad)" mask="url(#shape-mask)" style="pointer-events:none;" />`;
   }
+
+  let bgElement = `<g ${shapeEffectsAttr}>${bgContent}</g>`;
 
   // Text Common Attributes
   const fontFamily = state.font;
@@ -387,14 +397,14 @@ export function renderSVG(state) {
 
     // Apply Clip Path here
     const groupOp = solid ? `opacity="${baseOp}"` : '';
-    longShadowGroup = `<g clip-path="url(#shape-clip)" ${groupOp}>${clones}</g>`;
+    longShadowGroup = `<g mask="url(#shape-mask)" ${groupOp}>${clones}</g>`;
   }
 
   // Drop Shadow Group (Clipped)
   let dropShadowGroup = '';
   if (state.shadowEnabled && state.shadowType === 'drop') {
     dropShadowGroup = `
-        <g clip-path="url(#shape-clip)">
+        <g mask="url(#shape-mask)">
             <text ${textCommonAttrs} stroke="none" fill="black" filter="url(#text-shadow-only)" transform="translate(${offX}, ${offY}) rotate(${rotate}, ${center}, ${center})">${state.text}</text>
         </g>
       `;
@@ -427,7 +437,7 @@ export function renderSVG(state) {
   // Score Effect Overlay
   let scoreElement = '';
   if (state.scoreEnabled) {
-    scoreElement = `<rect x="0" y="0" width="${size}" height="${size}" fill="url(#score-gradient)" clip-path="url(#shape-clip)" style="pointer-events:none;" />`;
+    scoreElement = `<rect x="0" y="0" width="${size}" height="${size}" fill="url(#score-gradient)" mask="url(#shape-mask)" style="pointer-events:none;" />`;
   }
 
   return `

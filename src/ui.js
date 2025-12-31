@@ -77,6 +77,45 @@ export function initUI() {
     const previewContainer = document.getElementById('preview-container');
     const btnExport = document.getElementById('btn-export');
 
+    // Update Visibility of Effect Controls
+    const updateVisibility = () => {
+        const toggles = [
+            'effect-shape-shadow-enabled',
+            'effect-shape-inner-shadow-enabled',
+            'effect-bg-gradient-enabled',
+            'effect-text-gradient-enabled',
+            'effect-shadow-enabled',
+            'effect-outline-enabled',
+            'effect-finish-layer-enabled',
+            'effect-edge-tint-shade-enabled',
+            'effect-score-enabled'
+        ];
+
+        toggles.forEach(id => {
+            const checkbox = document.getElementById(id);
+            if (!checkbox) return;
+            
+            const fieldset = checkbox.closest('fieldset');
+            if (fieldset) {
+                const allInputs = fieldset.querySelectorAll('input, select, textarea');
+                allInputs.forEach(input => {
+                    if (input !== checkbox) {
+                        input.disabled = !checkbox.checked;
+                        // Find the container div to dim it
+                        const container = input.closest('.control-group');
+                        if (container) {
+                            container.style.opacity = checkbox.checked ? '1' : '0.5';
+                            container.style.pointerEvents = checkbox.checked ? 'auto' : 'none';
+                        }
+                    }
+                });
+            }
+        });
+    };
+
+    // Initial Visibility Update
+    updateVisibility();
+
     // Input Listeners
     Object.keys(inputs).forEach(key => {
         const el = inputs[key];
@@ -84,6 +123,11 @@ export function initUI() {
             el.addEventListener('input', (e) => {
                 const val = el.type === 'checkbox' ? el.checked : e.target.value;
                 state.update({ [key]: val });
+
+                // Update Visibility
+                if (el.type === 'checkbox') {
+                    updateVisibility();
+                }
 
                 // Update Hex Display with safety check
                 if (el.type === 'color') {
