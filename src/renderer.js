@@ -142,6 +142,7 @@ export function renderSVG(state) {
   // 0. Font Embedding
   const getFontImportURL = (fontName) => {
     const map = {
+      'Material Icons': 'https://fonts.googleapis.com/icon?family=Material+Icons',
       'Noto Sans JP': 'https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap',
       'Noto Serif JP': 'https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;700&display=swap',
       'Noto Sans Symbols': 'https://fonts.googleapis.com/css2?family=Noto+Sans+Symbols&display=swap',

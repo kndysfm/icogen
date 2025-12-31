@@ -12,6 +12,7 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Noto+Serif+JP:wght@400;700&family=Noto+Sans+Symbols&family=Noto+Sans+Symbols+2&family=Noto+Music&family=Noto+Serif+Hentaigana&family=Noto+Sans+Egyptian+Hieroglyphs&family=Noto+Color+Emoji&family=Noto+Emoji:wght@400;700&display=swap"
     rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 
 <body>
@@ -31,6 +32,7 @@
       <div class="control-group">
         <label for="input-font">Font Family</label>
         <select id="input-font">
+          <option value="Material Icons">Material Icons</option>
           <option value="Noto Sans JP" selected>Noto Sans JP</option>
           <option value="Noto Serif JP">Noto Serif JP</option>
           <option value="Noto Sans Symbols">Noto Sans Symbols</option>
@@ -41,6 +43,13 @@
           <option value="Noto Color Emoji">Noto Color Emoji</option>
           <option value="Noto Emoji">Noto Emoji</option>
         </select>
+      </div>
+
+      <div class="control-group" id="catalog-container" style="display:none;">
+        <label>Catalog</label>
+        <div id="catalog-grid" class="catalog-grid">
+          <!-- Items will be injected here -->
+        </div>
       </div>
 
       <div class="control-group">

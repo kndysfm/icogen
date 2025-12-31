@@ -1,6 +1,7 @@
 import { state } from './state.js';
 import { renderSVG } from './renderer.js';
 import { exportICO } from './exporter.js';
+import { CATALOG_DATA } from './catalog_data.js';
 
 export function initUI() {
     const inputs = {
@@ -91,9 +92,52 @@ export function initUI() {
                         span.textContent = e.target.value;
                     }
                 }
+
+                // Update Catalog if font changed
+                if (key === 'font') {
+                    updateCatalog(val);
+                }
             });
         }
     });
+
+    // --- Catalog Logic ---
+    const catalogContainer = document.getElementById('catalog-container');
+    const catalogGrid = document.getElementById('catalog-grid');
+
+    const updateCatalog = (fontName) => {
+        const items = CATALOG_DATA[fontName];
+        if (items && items.length > 0) {
+            catalogContainer.style.display = 'block';
+            catalogGrid.innerHTML = '';
+            items.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'catalog-item';
+                div.textContent = item;
+                div.title = item; // Tooltip
+
+                // Special styling for Material Icons (ligatures)
+                if (fontName === 'Material Icons') {
+                    div.style.fontFamily = 'Material Icons';
+                    div.style.fontSize = '24px';
+                } else {
+                    div.style.fontFamily = fontName;
+                }
+
+                div.addEventListener('click', () => {
+                    inputs.text.value = item;
+                    // Trigger input event to update state
+                    inputs.text.dispatchEvent(new Event('input'));
+                });
+                catalogGrid.appendChild(div);
+            });
+        } else {
+            catalogContainer.style.display = 'none';
+        }
+    };
+
+    // Initialize Catalog
+    updateCatalog(inputs.font.value);
 
     // --- Save / Load Logic ---
     const btnSave = document.getElementById('btn-save');
@@ -134,6 +178,10 @@ export function initUI() {
                 state.update(loadedState);
                 // Sync UI
                 syncUI();
+                // Update Catalog
+                if (loadedState.font) {
+                    updateCatalog(loadedState.font);
+                }
             } catch (err) {
                 alert('Failed to load settings: ' + err.message);
                 console.error(err);
