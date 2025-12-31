@@ -12,6 +12,15 @@
   --md-on-surface: #ffffff;
   --md-on-error: #000000;
 
+  /* Theme Dependent Colors (Dark Default) */
+  --md-border-color: rgba(255, 255, 255, 0.12);
+  --md-input-bg: rgba(255, 255, 255, 0.05);
+  --md-input-text: #ffffff;
+  --md-catalog-bg: rgba(0, 0, 0, 0.2);
+  --md-catalog-hover: rgba(255, 255, 255, 0.1);
+  --md-catalog-active: rgba(255, 255, 255, 0.2);
+  --md-checker-color: #2c2c2c;
+
   /* Spacing */
   --spacing-xs: 4px;
   --spacing-sm: 8px;
@@ -21,6 +30,28 @@
 
   /* Layout */
   --pane-width-side: 320px;
+}
+
+[data-theme="light"] {
+  --md-primary: #6200ee;
+  --md-primary-variant: #3700b3;
+  --md-secondary: #018786;
+  --md-background: #f5f5f5;
+  --md-surface: #ffffff;
+  --md-error: #b00020;
+  --md-on-primary: #ffffff;
+  --md-on-secondary: #000000;
+  --md-on-background: #000000;
+  --md-on-surface: #000000;
+  --md-on-error: #ffffff;
+
+  --md-border-color: rgba(0, 0, 0, 0.12);
+  --md-input-bg: rgba(0, 0, 0, 0.05);
+  --md-input-text: #000000;
+  --md-catalog-bg: rgba(0, 0, 0, 0.05);
+  --md-catalog-hover: rgba(0, 0, 0, 0.05);
+  --md-catalog-active: rgba(0, 0, 0, 0.1);
+  --md-checker-color: #e0e0e0;
 }
 
 * {
@@ -45,7 +76,7 @@ body {
   height: 56px;
   display: flex;
   align-items: center;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  border-bottom: 1px solid var(--md-border-color);
   flex-shrink: 0;
   z-index: 10;
 }
@@ -55,6 +86,24 @@ body {
   font-weight: 500;
   letter-spacing: 0.15px;
   color: var(--md-on-surface);
+  flex: 1;
+}
+
+.btn-icon {
+  background: transparent;
+  border: none;
+  color: var(--md-on-surface);
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s;
+}
+
+.btn-icon:hover {
+  background-color: var(--md-catalog-hover);
 }
 
 #app {
@@ -69,8 +118,8 @@ body {
 aside {
   background-color: var(--md-surface);
   padding: var(--spacing-md);
-  border-right: 1px solid rgba(255, 255, 255, 0.12);
-  border-left: 1px solid rgba(255, 255, 255, 0.12);
+  border-right: 1px solid var(--md-border-color);
+  border-left: 1px solid var(--md-border-color);
   display: flex;
   flex-direction: column;
   gap: var(--spacing-md);
@@ -87,10 +136,10 @@ aside {
   gap: 4px;
   max-height: 120px;
   overflow-y: auto;
-  background: rgba(0, 0, 0, 0.2);
+  background: var(--md-catalog-bg);
   padding: 4px;
   border-radius: 4px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--md-border-color);
 }
 
 .catalog-item {
@@ -106,11 +155,11 @@ aside {
 }
 
 .catalog-item:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: var(--md-catalog-hover);
 }
 
 .catalog-item:active {
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: var(--md-catalog-active);
 }
 
 #right-pane {
@@ -127,10 +176,10 @@ main {
   align-items: center;
   justify-content: center;
   background-image:
-    linear-gradient(45deg, #2c2c2c 25%, transparent 25%),
-    linear-gradient(-45deg, #2c2c2c 25%, transparent 25%),
-    linear-gradient(45deg, transparent 75%, #2c2c2c 75%),
-    linear-gradient(-45deg, transparent 75%, #2c2c2c 75%);
+    linear-gradient(45deg, var(--md-checker-color) 25%, transparent 25%),
+    linear-gradient(-45deg, var(--md-checker-color) 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, var(--md-checker-color) 75%),
+    linear-gradient(-45deg, transparent 75%, var(--md-checker-color) 75%);
   background-size: 20px 20px;
   background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
   position: relative;
@@ -146,7 +195,7 @@ h3 {
 h2 {
   font-size: 1.25rem;
   color: var(--md-secondary);
-  border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 2px solid var(--md-border-color);
   padding-bottom: var(--spacing-xs);
 }
 
@@ -164,9 +213,9 @@ label {
 input[type="text"],
 select,
 input[type="color"] {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: white;
+  background: var(--md-input-bg);
+  border: 1px solid var(--md-border-color);
+  color: var(--md-input-text);
   padding: var(--spacing-sm);
   border-radius: 4px;
   font-size: 1rem;
@@ -174,7 +223,7 @@ input[type="color"] {
 
 select option {
   background-color: var(--md-surface);
-  color: white;
+  color: var(--md-input-text);
 }
 
 input[type="text"]:focus,
@@ -235,8 +284,8 @@ button.btn-primary:active {
 
 /* Fieldset Styling */
 fieldset.effect-group {
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--md-border-color);
+  background: var(--md-input-bg);
   border-radius: 8px;
   padding: var(--spacing-sm) var(--spacing-md) var(--spacing-md);
   margin-bottom: var(--spacing-sm);
@@ -280,8 +329,8 @@ fieldset.effect-group .control-group:last-child {
   display: flex;
   align-items: center;
   gap: var(--spacing-sm);
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--md-input-bg);
+  border: 1px solid var(--md-border-color);
   padding: 4px;
   /* Tighter padding for wrapper */
   border-radius: 4px;
@@ -307,7 +356,7 @@ input[type="color"]::-webkit-color-swatch-wrapper {
 input[type="color"]::-webkit-color-swatch {
   border: none;
   border-radius: 4px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid var(--md-border-color);
 }
 
 .color-value {
@@ -319,15 +368,15 @@ input[type="color"]::-webkit-color-swatch {
 
 /* Collapsible Styling */
 details {
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--md-border-color);
+  background: var(--md-input-bg);
   border-radius: 8px;
   margin-bottom: var(--spacing-sm);
   overflow: hidden;
 }
 
 details[open] {
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--md-catalog-hover);
 }
 
 summary {
@@ -359,7 +408,7 @@ details[open] summary::after {
 }
 
 details[open] summary {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid var(--md-border-color);
   margin-bottom: var(--spacing-sm);
 }
 

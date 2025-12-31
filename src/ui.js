@@ -77,6 +77,33 @@ export function initUI() {
     const previewContainer = document.getElementById('preview-container');
     const btnExport = document.getElementById('btn-export');
 
+    // --- Theme Toggle ---
+    const themeToggleBtn = document.getElementById('theme-toggle');
+    if (themeToggleBtn) {
+        const themeIcon = themeToggleBtn.querySelector('.material-icons');
+
+        const setTheme = (theme) => {
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+            // Icon shows what will happen on click (e.g. if light, show moon to switch to dark)
+            // Or show current state? Usually show "mode to switch to".
+            // If current is light, show moon (dark mode).
+            // If current is dark, show sun (light mode).
+            themeIcon.textContent = theme === 'light' ? 'dark_mode' : 'light_mode';
+            themeToggleBtn.title = theme === 'light' ? 'Switch to Dark Mode' : 'Switch to Light Mode';
+        };
+
+        // Load saved theme
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        setTheme(savedTheme);
+
+        themeToggleBtn.addEventListener('click', () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            setTheme(newTheme);
+        });
+    }
+
     // Update Visibility of Effect Controls
     const updateVisibility = () => {
         const toggles = [
@@ -94,7 +121,7 @@ export function initUI() {
         toggles.forEach(id => {
             const checkbox = document.getElementById(id);
             if (!checkbox) return;
-            
+
             const fieldset = checkbox.closest('fieldset');
             if (fieldset) {
                 const allInputs = fieldset.querySelectorAll('input, select, textarea');
